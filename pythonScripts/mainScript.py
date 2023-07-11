@@ -9,7 +9,7 @@ from attach import read_and_replace_word_file
 
 
 # Load environment variables from .env file
-dotenv_path = r"D:\react-projects\0.0.7_0\myapp\heyhey\.env"  # Replace with the absolute path to your .env file
+dotenv_path = r"D:\react-projects\0.0.7_0\myapp\heyhey\frontend\.env"  # Replace with the absolute path to your .env file
 load_dotenv(dotenv_path)
 
 
@@ -36,7 +36,7 @@ input_data = sys.stdin.read()
 # Parse the JSON input into a Python object
 data_array = json.loads(input_data)
 pageid, useremail, password, cc, subject,body, columnsdata, rowdata = data_array
-base_folder = r'D:\react-projects\0.0.7_0\myapp\heyhey\server\uploads'
+base_folder = os.path.join(server_folder_path, 'uploads')
 folder_name = pageid
 folder_path = os.path.join(base_folder, folder_name)
 

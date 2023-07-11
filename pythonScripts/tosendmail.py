@@ -54,7 +54,7 @@ attachment_path = 'myfile.docx'
 smtp_server = "smtp.gmail.com"
 smtp_port = 587
 username = "adityafake8340@gmail.com"
-password = "iaomqwexigrjlnaf"
+
 
 # Call the send_email function
 # send_email(sender_email, receiver_email, subject, message, attachment_path, smtp_server, smtp_port, username, password)

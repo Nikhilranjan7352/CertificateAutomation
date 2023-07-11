@@ -7,6 +7,7 @@ import LoginModal from "./LoginModal";
 import { BsFillInfoCircleFill } from 'react-icons/bs';
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
+// import dotenv from 'dotenv';
 
 
 
@@ -30,7 +31,8 @@ const HomePage = () => {
   const [body, setBody] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   useEffect(() => {
-    axios.get('http://localhost:9000')
+    console.log(process.env.REACT_APP_BACKEND_URL);
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}`)
       .then(response => {
         // Handle the response data
         console.log(response.data);
@@ -72,7 +74,7 @@ const HomePage = () => {
   
   
   
-  axios.post('http://localhost:9000/oop', formData)
+  axios.post(process.env.REACT_APP_BACKEND_URL+'/oop', formData)
   .then(response => {
     // Handle the response data
     console.log(response.data);
@@ -90,7 +92,7 @@ const HomePage = () => {
       variable2: 'value2'
     };
   
-    axios.post('http://localhost:9000/oop', data)
+    axios.post(process.env.REACT_APP_BACKEND_URL+'/oop', data)
       .then(response => {
         // Handle the response data
         console.log(response.data);
