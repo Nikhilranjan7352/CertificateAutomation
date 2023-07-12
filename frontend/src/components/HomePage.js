@@ -7,7 +7,9 @@ import LoginModal from "./LoginModal";
 import { BsFillInfoCircleFill } from 'react-icons/bs';
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
+import config from "../clientconfig.json"
 // import dotenv from 'dotenv';
+
 
 
 
@@ -30,9 +32,12 @@ const HomePage = () => {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [showModal,sertShowModal]=useState(false)
+  const [logarray,setLogArray]=useState([])
+
   useEffect(() => {
-    console.log(process.env.REACT_APP_BACKEND_URL);
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}`)
+    console.log(config);
+    axios.get(config.REACT_APP_BACKEND_URL)
       .then(response => {
         // Handle the response data
         console.log(response.data);
@@ -74,7 +79,7 @@ const HomePage = () => {
   
   
   
-  axios.post(process.env.REACT_APP_BACKEND_URL+'/oop', formData)
+  axios.post(config.REACT_APP_BACKEND_URL+'/oop', formData)
   .then(response => {
     // Handle the response data
     console.log(response.data);
@@ -92,7 +97,7 @@ const HomePage = () => {
       variable2: 'value2'
     };
   
-    axios.post(process.env.REACT_APP_BACKEND_URL+'/oop', data)
+    axios.post(config.REACT_APP_BACKEND_URL+'/oop', data)
       .then(response => {
         // Handle the response data
         console.log(response.data);
@@ -102,7 +107,23 @@ const HomePage = () => {
         console.error(error);
       });
   }
-
+  const getLogs = () => {
+    const data = {
+      pageid: pageid,
+      
+    };
+  
+    axios.post(config.REACT_APP_BACKEND_URL + '/getLogs', data)
+      .then(response => {
+        // Handle the response data
+        console.log(response.data);
+        setLogArray(response.data)
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
+  };
  
   const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
@@ -162,6 +183,57 @@ const HomePage = () => {
  
   return (
     <>
+    <Modal
+        show={showModal}
+        cancel={()=>{sertShowModal(false)
+
+        }}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">Logout</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px', marginBottom: '20px' }}>
+      <h5 style={{ marginRight: '10px' }}>Click this button to submit your request</h5>
+      <Button style={{ backgroundColor: '#e6f2ff', color: '#000000', padding: '10px 20px', border: 'none', borderRadius: '4px', fontSize: '16px', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', transition: 'background-color 0.3s ease' }} onClick={()=>{handleFileSelect()
+      const interval = setInterval(() => {
+        if (rowdata.length === logarray.length +1) {
+          clearInterval(interval);
+        } else {
+          getLogs();
+        }
+      }, 2000);
+      }}
+      >
+        Send Email
+      </Button>
+    </div>
+          <Card style={{ width: '100%',background:"#EAF2F8"}}>
+            <Card.Title>
+              Your Logs will appear as soon as you submit your request<br></br>
+            </Card.Title>
+          <Card.Body>
+            {logarray.map(log=>(
+              <>{log}
+              <br></br>
+              </>
+            ))}
+
+          </Card.Body>
+
+
+          </Card>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={()=>{
+            sertShowModal(false)
+          }}>Cancel</Button>
+        </Modal.Footer>
+      </Modal>
     {info&&(<Alert ref={alertRef} variant={"Primary"}>
     <Button
             onClick={handleClose}
@@ -282,16 +354,16 @@ const HomePage = () => {
           console.log(cc)
           console.log(subject)
           console.log(password)
-          handleFileSelect()
-          // setShowLogin(true)
+          // handleFileSelect()
+          sertShowModal(true)
           
         }
       }
         >Open Modal</button>
-      <LoginModal show={showLogin}
+      {/* <LoginModal show={showLogin}
       
       close={() => setShowLogin(false)} 
-      />
+      /> */}
         
         {/* <Button variant="primary">Go somewhere</Button> */}
       </Card.Body>

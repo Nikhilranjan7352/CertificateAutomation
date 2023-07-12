@@ -6,18 +6,17 @@ import docx
 from dotenv import load_dotenv
 from tosendmail import send_email
 from attach import read_and_replace_word_file
+from config import variables
 
 
 # Load environment variables from .env file
-dotenv_path = r"D:\react-projects\0.0.7_0\myapp\heyhey\frontend\.env"  # Replace with the absolute path to your .env file
-load_dotenv(dotenv_path)
+
 
 
 # Access the environment variables
-server_folder_path = os.getenv("SERVER_FOLDER_PATH")
-client_folder_path = os.getenv("CLIENT_FOLDER_PATH")
-python_scripts_folder_path = os.getenv("PYTHON_SCRIPTS_FOLDER_PATH")
-print(server_folder_path)
+server_folder_path = variables["SERVER_FOLDER_PATH"]
+client_folder_path = variables["FRONTEND_FOLDER_PATH"]
+
 
 # Read the input from stdin
 def replace_variables(string, variables, new_values):
@@ -39,6 +38,9 @@ pageid, useremail, password, cc, subject,body, columnsdata, rowdata = data_array
 base_folder = os.path.join(server_folder_path, 'uploads')
 folder_name = pageid
 folder_path = os.path.join(base_folder, folder_name)
+logfilepath=folder_path+"/log.txt"
+with open(logfilepath, 'w') as log_file:
+        log_file.write('Logs of your request will appear here  :)\n')
 
 # Find the Word file with a .doc or .docx extension
 word_file = next((file for file in os.listdir(folder_path) if file.endswith('.doc') or file.endswith('.docx')), None)
@@ -58,7 +60,7 @@ for i in rowdata:
     outputfile=os.path.join(folder_path,filename)
     read_and_replace_word_file(filepath,outputfile,columnsdata,userdata)
     print("i think file is created")
-    send_email(useremail, to, subjectuser, bodyuser, outputfile, "smtp.gmail.com",  587, "adityafake8340@gmail.com", "iaomqwexigrjlnaf")
+    send_email(useremail, to, subjectuser, bodyuser, outputfile, "smtp.gmail.com",  587, useremail, password,logfilepath)
     print("mail sent to"+to)
 
    

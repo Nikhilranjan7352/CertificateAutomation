@@ -1,1 +1,6 @@
 frontend/node_modules
+server_config.json
+script_config.json
+clientconfig.json
+folder_*/
+

@@ -1,5 +1,5 @@
 
-
+const path = require('path');
 
 const express = require('express');
 const app = express();
@@ -9,6 +9,8 @@ const { v4: uuidv4 } = require('uuid');
 const fs = require('fs-extra');
 const { json } = require('body-parser');
 const { spawn } = require('child_process');
+const config = require('./server_config.json');
+const pythonpath = config.PYTHON_SCRIPTS_FOLDER_PATH;
 
 app.use(cors());
 app.use(express.json());
@@ -59,12 +61,43 @@ app.post('/cleanup', (req, res) => {
     });
 });
 
+app.post('/getLogs', (req, res) => {
+  const folderPath = "uploads/"+req.body.pageid;
+  const filePath = path.join(folderPath, 'log.txt');
+
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // File does not exist
+      res.json([]);
+    } else {
+      // File exists, read its content
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          // Handle the error
+          console.error(err);
+          res.status(500).json({ error: 'An error occurred while reading the file.' });
+        } else {
+          // Split the content into an array of lines
+          const logs = data.trim().split('\n');
+          res.json(logs);
+        }
+      });
+    }
+  });
+});
+
+
+
+
+
+
+
 
 app.post('/oop', upload.single('file'), (req, res) => {
   const file = req.file;
   const dataArray=JSON.parse(req.body.uploadLocation);
   console.log(dataArray[1]);
-  const pythonProcess = spawn('python', ['D:/react-projects/0.0.7_0/myapp/heyhey/pythonScripts/mainScript.py']);
+  const pythonProcess = spawn('python', [`${config.PYTHON_SCRIPTS_FOLDER_PATH}/mainScript.py`]);
 
   pythonProcess.stdin.write(JSON.stringify(dataArray));
   pythonProcess.stdin.end();

@@ -4,7 +4,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 
-def send_email(sender_email, receiver_email, subject, message, attachment_path, smtp_server, smtp_port, username, password):
+def send_email(sender_email, receiver_email, subject, message, attachment_path, smtp_server, smtp_port, username, password,logFilePath):
     # Create a multipart message
     msg = MIMEMultipart()
     msg['From'] = sender_email
@@ -35,9 +35,13 @@ def send_email(sender_email, receiver_email, subject, message, attachment_path, 
         # Send the email
         server.sendmail(sender_email, receiver_email, msg.as_string())
         print("Email sent successfully!")
+        with open(logFilePath, 'a') as log_file:
+            log_file.write('Email sent successfully! :'+receiver_email+'\n')
 
     except Exception as e:
         print("An error occurred while sending the email:", str(e))
+        with open(logFilePath, 'a') as log_file:
+            log_file.write('Email sending failed:'+receiver_email+'\n')
 
     finally:
         # Close the connection
