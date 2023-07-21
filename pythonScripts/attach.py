@@ -2,6 +2,7 @@ from docx import Document
 
 def replace_variable(document, variable, new_value):
     for paragraph in document.paragraphs:
+        # print(paragraph.text)
         if variable in paragraph.text:
             inline = paragraph.runs
             for i in range(len(inline)):
@@ -17,9 +18,13 @@ def read_and_replace_word_file(input_file_path, output_file_path, variables, new
     print(new_values)
     # Load the Word document
     doc = Document(input_file_path)
+    
+    
 
     # Replace variables with new values
     for variable, new_value in zip(variables, new_values):
+        
+        
         replace_variable(doc, variable, new_value)
 
     # Save the modified document as a new file

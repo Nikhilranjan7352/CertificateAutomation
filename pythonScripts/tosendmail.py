@@ -16,6 +16,7 @@ def send_email(sender_email, receiver_email, subject, message, attachment_path, 
 
     # Add attachment
     with open(attachment_path, 'rb') as attachment:
+        attachment_path = 'certificate.docx'
         part = MIMEBase('application', 'octet-stream')
         part.set_payload(attachment.read())
         encoders.encode_base64(part)
